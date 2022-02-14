@@ -15,15 +15,15 @@ int main() {
     sf::Clock clock; //set up the clock (needed for game timing)
     const float FPS = 60.0f; //FPS
     screen.setFramerateLimit(FPS); //set FPS
-    sf::Texture pacman;
-    pacman.loadFromFile("manpac.png");
-    sf::IntRect pac(0, 0, 70, 70);
-    sf::Sprite playerImg(pacman, pac);
     //load in images
     sf::Texture brick;
     brick.loadFromFile("brick.png");
     sf::Sprite wall;
     wall.setTexture(brick);
+    sf::Texture pacman;
+    pacman.loadFromFile("pacman.png");
+    sf::IntRect pac(0, 0, 70, 70);
+    sf::Sprite playerImg(pacman, pac);
 
     int map[10][10] = {
         1,1,1,1,1,1,1,1,1,1,
@@ -43,6 +43,9 @@ int main() {
     int ypos = 85;
     int vx = 0;
     int vy = 0;
+    int frameNum=0;
+    int ticker{};
+    int rowNum=0;
     sf::CircleShape player(radius);
     sf::CircleShape dot(radius);
     dot.setFillColor(sf::Color(255, 255, 255));
@@ -153,11 +156,28 @@ int main() {
 
         
 
-       
+       //update player
         xpos += vx;
         ypos += vy;
         player.setPosition(xpos, ypos);
 
+        //animate player
+        if (vx != 0 || vy != 0) {
+            ticker += 1;
+            if (ticker % 10 == 0)
+                frameNum += 1;
+            if (frameNum > 3)
+                frameNum = 0;
+        }
+
+        
+        pac = sf::IntRect(frameNum * 70, rowNum * 70, 68, 68);
+        sf::Sprite playerImg(pacman, pac);
+        playerImg.setPosition(xpos, ypos);
+
+
+
+        //EAT DOTS
         if (map[ypos / 80][xpos / 80] == 0)
             map[ypos / 80][xpos / 80] = 20;
 
@@ -181,7 +201,7 @@ int main() {
       
 
 
-        screen.draw(player); //draw player
+        screen.draw(playerImg); //draw player
         screen.display(); //flips memory drawings onto screen
 
     }//######################## end game loop ###################################################################################
