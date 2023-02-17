@@ -18,38 +18,79 @@ public:
 };
 sf::RenderWindow window(sf::VideoMode(800, 800), "Breakout");
 
+
+
 int main() {
+	//sf::Clock clock; //set up the clock (needed for game timing)
+	const float FPS = 60.0f; //FPS
+	window.setFramerateLimit(FPS); //set FPS
 	
 	Brick block;
 	sf::Event event;
 	float py = 700;
 	float px = 400;
+	float pv = 0;
 	block.init(200, 200);
+
+	float bx = 450;
+	float by = 650;
+	float xVel = 5;
+	float yVel = -5;
+	sf::CircleShape ball(20); //sets radius of circle
+	ball.setFillColor(sf::Color(200, 50, 50)); //numbers and color names
+	ball.setPosition(bx, by); //position
 
 	sf::RectangleShape paddle(sf::Vector2f(100.0f, 20.0f));
 	paddle.setFillColor(sf::Color::Blue); 
 	paddle.setPosition(px, py);
+	
 
 	
 
 	while (window.isOpen()) {
 		while (window.pollEvent(event)) {
 
+			if (event.type == sf::Event::EventType::Closed)
+				window.close();
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+				paddle.move(-5, 0);
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+				paddle.move(5, 0);
+			}
+			
+			
 
 
 
 
-
-
-
-
-			//render section------------------------------------------------------------
-
-			window.clear();
-			window.draw(paddle);
-			block.DrawB();
-			window.display();
+			
 		}
+	
+		
+		if (bx < 0 || bx >800) {
+			xVel *= -1;
+		}
+		if (by < 0 || by >800) {
+			yVel *= -1;
+		}
+
+		px += pv;
+		bx += xVel;
+		by += yVel;
+
+		ball.setPosition(bx, by);
+
+
+		//render section------------------------------------------------------------
+
+		window.clear();
+		window.draw(paddle);
+		window.draw(ball);
+		block.DrawB();
+		window.display();
 	}
 }
 void Brick::init(int x, int y) {
@@ -67,4 +108,3 @@ void Brick::DrawB() {
 	window.draw(rectangle);
 
 }
-
