@@ -29,7 +29,7 @@ int main() {
 	sf::Event event;
 	float py = 700;
 	float px = 400;
-	float pv = 0;
+	
 	block.init(200, 200);
 
 	float bx = 450;
@@ -55,10 +55,12 @@ int main() {
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 				paddle.move(-5, 0);
+				px -= 5;
 			}
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 				paddle.move(5, 0);
+				px += 5;
 			}
 			
 			
@@ -77,7 +79,10 @@ int main() {
 			yVel *= -1;
 		}
 
-		px += pv;
+		if (by+20  > py && bx + 20 > px && bx < px + 100)
+			yVel *= -1;
+
+		
 		bx += xVel;
 		by += yVel;
 
